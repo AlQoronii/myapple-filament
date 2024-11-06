@@ -13,12 +13,9 @@ return new class extends Migration
     {
         Schema::create('history', function (Blueprint $table) {
             $table->id();
-            $table->dateTime('scan_date');
+            $table->timestamp('scan_date')->useCurrent();
             $table->unsignedBigInteger('user_id');
-            $table->unsignedBigInteger('apple_id');
             $table->string('scan_image_path');
-            $table->string('condition_label');
-            $table->string('gejala');
             $table->unsignedBigInteger('disease_info_id'); // Explicitly set to unsignedBigInteger
             
             // Define the foreign key constraint explicitly
@@ -31,14 +28,7 @@ return new class extends Migration
                   ->references('id')
                   ->on('users')
                   ->onDelete('cascade');
-            
-            $table->foreign('apple_id')
-                    ->references('id')
-                    ->on('table_apple')
-                    ->onDelete('cascade');
-                    
-
-            
+                  
             $table->timestamps();
         });
         
