@@ -25,5 +25,9 @@ class DatabaseSeeder extends Seeder
             'email' => 'admin@adminn.com',
             'role' => 'admin',
         ]);
+
+        $this->call([
+            CategoriesSeeder::class,
+        ]);
     }
 }
