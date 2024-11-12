@@ -17,7 +17,7 @@ return new class extends Migration
             $table->unsignedBigInteger('history_id'); // Relasi dengan tabel history
             $table->timestamps();
         
-            $table->foreign('apple_id')->references('id')->on('apples')->onDelete('cascade');
+            $table->foreign('apple_id')->references('id')->on('table_apple')->onDelete('cascade');
             $table->foreign('history_id')->references('id')->on('history')->onDelete('cascade');
         });
         
