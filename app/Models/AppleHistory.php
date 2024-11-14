@@ -17,8 +17,8 @@ class AppleHistory extends Model
         return $this->belongsTo(Apple::class);
     }
 
-    // public function history()
-    // {
-    //     return $this->belongsTo(History::class);
-    // }
+    public function history()
+    {
+        return $this->belongsTo(History::class);
+    }
 }
