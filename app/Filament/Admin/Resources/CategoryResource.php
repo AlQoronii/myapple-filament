@@ -6,6 +6,10 @@ use App\Filament\Admin\Resources\CategoryResource\Pages;
 use App\Filament\Admin\Resources\CategoryResource\RelationManagers;
 use App\Models\Category;
 use Filament\Forms;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Grid;
+use Filament\Forms\Components\Textarea;
+use Filament\Forms\Components\TextInput;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -23,22 +27,50 @@ class CategoryResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Card::make()
+                    ->schema([
+                        TextInput::make('category')
+                            ->label('Category')
+                            ->required()
+                            ->autofocus()
+                            ->placeholder('Enter category name'),
+    
+                        Grid::make(2) // Membuat grid 2 kolom untuk meletakkan treatment dan description dalam satu baris
+                            ->schema([
+                                Textarea::make('description')
+                                    ->label('Description')
+                                    ->required()
+                                    ->placeholder('Masukkan deskripsi untuk kategori ini')
+                                    ->columnSpan(1)
+                                    ->extraAttributes(['style' => 'width: 100%; height: 150px;']), // Mengatur width dan height
+                                
+                                Textarea::make('treatment')
+                                    ->label('Treatment')
+                                    ->required()
+                                    ->placeholder('Masukkan cara penanganan untuk kategori ini')
+                                    ->columnSpan(1)
+                                    ->extraAttributes(['style' => 'width: 100%; height: 150px;']), // Mengatur width dan height
+
+                                
+                            ]),
+                    ])
+                    ->columns(1), // Set agar Card menggunakan 1 kolom untuk konsistensi
             ]);
     }
 
     public static function table(Table $table): Table
     {
         return $table
+            ->query(fn() => Category::query()->latest())
             ->columns([
                 // add column
-                Tables\Columns\TextColumn::make('category'),
+                Tables\Columns\TextColumn::make('category')->searchable()->sortable(),
                 Tables\Columns\TextColumn::make('treatment')
                     ->wrap()
-                    ->limit(50),
+                    ->limit(25),
                 Tables\Columns\TextColumn::make('description')
                     ->wrap()
-                    ->limit(100),
+                    ->limit(50),
             ])
             ->filters([
 
