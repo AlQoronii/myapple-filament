@@ -11,14 +11,18 @@ class AppleHistory extends Model
 
     protected $table = 'apple_history';
 
+    protected $fillable = [
+        'apple_id',
+        'history_id',
+    ];
 
     public function apple()
     {
-        return $this->belongsTo(Apple::class);
+        return $this->belongsTo(Apple::class, 'apple_id');
     }
 
     public function history()
     {
-        return $this->belongsTo(History::class);
+        return $this->belongsTo(History::class, 'history_id');
     }
 }
