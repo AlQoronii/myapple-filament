@@ -8,9 +8,17 @@ use Illuminate\Database\Eloquent\Model;
 class Category extends Model
 {
     use HasFactory;
-    // add fillable property
+
+    protected $table = 'categories';
+
     protected $fillable = [
         'category',
-        'treatment', 
-        'description'];
+        'treatment',
+        'description',
+    ];
+
+    public function histories()
+    {
+        return $this->hasMany(History::class, 'disease_info_id');
+    }
 }
