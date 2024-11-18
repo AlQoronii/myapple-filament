@@ -15,5 +15,6 @@ class EditArticle extends EditRecord
         return [
             Actions\DeleteAction::make(),
         ];
+        
     }
 }
