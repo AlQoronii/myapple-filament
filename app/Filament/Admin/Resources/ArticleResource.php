@@ -6,6 +6,8 @@ use App\Filament\Admin\Resources\ArticleResource\Pages;
 use App\Filament\Admin\Resources\ArticleResource\RelationManagers;
 use App\Models\Article;
 use Filament\Forms;
+use Filament\Forms\Components\Card;
+use Filament\Forms\Components\Grid;
 use Filament\Forms\Form;
 use Filament\Resources\Resource;
 use Filament\Tables;
@@ -23,17 +25,38 @@ class ArticleResource extends Resource
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('title')
-                    ->required()
-                    ->maxLength(255),
-                Forms\Components\Textarea::make('content')
-                    ->required(),
-                Forms\Components\TextInput::make('image_path')
-                    ->maxLength(255),
-                Forms\Components\TextInput::make('source')
-                    ->maxLength(255),
-                Forms\Components\DatePicker::make('publication_date')
-                    ->required(),
+                Card::make()
+                    ->schema([
+                        Grid::make(2) // Create a 2-column grid to place title and content in one row
+                            ->schema([
+                                Forms\Components\TextInput::make('title')
+                                    ->label('Judul Artikel')
+                                    ->required()
+                                    ->autofocus()
+                                    ->placeholder('Enter article title'),
+                                Forms\Components\TextInput::make('source')
+                                    ->label('Sumber Artikel')
+                                    ->required()
+                                    ->placeholder('Enter article source'),
+                            ]),
+                        Forms\Components\Textarea::make('content')
+                            ->label('Isi Content')
+                            ->required()
+                            ->placeholder('Enter article content')
+                            ->extraAttributes(['style' => 'width: 100%; height: 150px;']), // Set width and height
+                        Forms\Components\FileUpload::make('image_path')
+                            ->disk('public')    
+                            ->label('Image')
+                            ->directory('articles')
+                            ->required()
+                            ->visibility('public')
+                            ->image(),
+                        
+                        
+                        Forms\Components\DatePicker::make('publication_date')
+                            ->label('Tanggal Publikasi')
+                            ->required(),
+                    ])
             ]);
     }
 
@@ -46,8 +69,9 @@ class ArticleResource extends Resource
                 Tables\Columns\TextColumn::make('content')
                     ->wrap()
                     ->limit(100),
-                Tables\Columns\TextColumn::make('image_path')
-                    ->limit(50),
+                //imagecolumn
+                Tables\Columns\ImageColumn::make('image_path')
+                    ->label('Image'),
                 Tables\Columns\TextColumn::make('source')
                     ->limit(50),
                 Tables\Columns\TextColumn::make('publication_date')
@@ -79,7 +103,7 @@ class ArticleResource extends Resource
         return [
             'index' => Pages\ListArticle::route('/'),
             'create' => Pages\CreateArticle::route('/create'),
-            'edit' => Pages\EditArticle::route('/edit'),
+            'edit' => Pages\EditArticle::route('/{record}/edit'),
         ];
     }
 }
