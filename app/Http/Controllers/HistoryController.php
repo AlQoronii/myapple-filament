@@ -9,28 +9,48 @@ class HistoryController extends Controller
 {
     public function index()
     {
-        return response()->json(History::all());
+        $histories = History::paginate(10); // Pagination
+        return response()->json([
+            'success' => true,
+            'message' => 'Histories retrieved successfully!',
+            'data' => $histories,
+        ]);
     }
 
     public function store(Request $request)
     {
-        $request->validate([
+        $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'scan_date' => 'required|date',
-            'scan_image_path' => 'required|string',
+            'scan_image_path' => 'required|string|max:255',
             'disease_info_id' => 'required|exists:categories,id',
         ]);
 
-        $history = History::create($request->all());
+        $history = History::create($validated);
 
-        return response()->json($history, 201);
+        return response()->json([
+            'success' => true,
+            'message' => 'History created successfully!',
+            'data' => $history,
+        ], 201);
     }
 
     public function show($id)
     {
-        $history = History::findOrFail($id);
+        $history = History::find($id);
 
-        return response()->json($history);
+        if (!$history) {
+            return response()->json([
+                'success' => false,
+                'message' => 'History not found',
+            ], 404);
+        }
+
+        return response()->json([
+            'success' => true,
+            'message' => 'History retrieved successfully!',
+            'data' => $history,
+        ]);
     }
 
     public function destroy($id)
@@ -38,6 +58,10 @@ class HistoryController extends Controller
         $history = History::findOrFail($id);
         $history->delete();
 
-        return response()->json(['message' => 'History deleted successfully']);
+        return response()->json([
+            'success' => true,
+            'message' => 'History deleted successfully!',
+            'data' => $history,
+        ]);
     }
 }
