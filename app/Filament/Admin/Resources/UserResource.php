@@ -40,9 +40,6 @@ class UserResource extends Resource
                     ->default('user')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('remember_token')
-                    ->maxLength(100),
-                Forms\Components\DatePicker::make('email_verified_at'),
             ]);
     }
 
@@ -55,6 +52,8 @@ class UserResource extends Resource
                 Tables\Columns\TextColumn::make('email')
                     ->limit(50),
                 Tables\Columns\TextColumn::make('role')
+                    ->limit(50),
+                Tables\Columns\TextColumn::make('picture_path')
                     ->limit(50),
             ])
             ->filters([
