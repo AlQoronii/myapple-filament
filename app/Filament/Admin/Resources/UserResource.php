@@ -34,17 +34,22 @@ class UserResource extends Resource
                     ->password()
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('picture_path')
-                    ->maxLength(255),
+                // Ganti ImageInput dengan FileUpload untuk mendukung upload gambar
+                Forms\Components\FileUpload::make('picture_path')
+                    ->image() // Memastikan hanya file gambar yang diterima
+                    ->label('Image')
+                    ->required() // Menjadikan field ini wajib diisi
+                    ->maxSize(1024) // Maksimum ukuran file dalam KB (1MB)
+                    ->directory('images') // Folder tempat gambar disimpan
+                    ->visibility('public') // Tentukan visibilitas file (misalnya 'public')
+                    ->acceptedFileTypes(['image/jpeg', 'image/png', 'image/jpg']), // Hanya tipe gambar yang diterima
                 Forms\Components\TextInput::make('role')
                     ->default('user')
                     ->required()
                     ->maxLength(255),
-                Forms\Components\TextInput::make('remember_token')
-                    ->maxLength(100),
-                Forms\Components\DatePicker::make('email_verified_at'),
             ]);
     }
+    
 
     public static function table(Table $table): Table
     {
@@ -56,6 +61,8 @@ class UserResource extends Resource
                     ->limit(50),
                 Tables\Columns\TextColumn::make('role')
                     ->limit(50),
+                Tables\Columns\ImageColumn::make('picture_path')
+                    ->label('picture'),
             ])
             ->filters([
                 //
@@ -83,7 +90,7 @@ class UserResource extends Resource
         return [
             'index' => Pages\ListUser::route('/'),
             'create' => Pages\CreateUser::route('/create'),
-            'edit' => Pages\EditUser::route('/edit'),
+            'edit' => Pages\EditUser::route('/{record}edit'),
         ];
     }
 }
