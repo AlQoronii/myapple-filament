@@ -7,6 +7,7 @@ use App\Http\Controllers\AppleController;
 use App\Http\Controllers\HistoryController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ArticleController;
+use App\Http\Controllers\UserController;
 
 /*
 |--------------------------------------------------------------------------
@@ -23,6 +24,11 @@ use App\Http\Controllers\ArticleController;
 Route::post('/register', [AuthController::class, 'register']); // Registrasi
 Route::post('/login', [AuthController::class, 'login']);       // Login
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Logout
+Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
+    Route::post('/update', [UserController::class, 'update']);
+    Route::post('/updatePassword', [UserController::class, 'updatePassword']);
+});
+
 
 // Endpoint yang membutuhkan autentikasi
 Route::middleware('auth:sanctum')->group(function () {
