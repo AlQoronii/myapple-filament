@@ -22,9 +22,9 @@ use App\Http\Controllers\UserController;
 
 // Endpoint untuk autentikasi
 Route::post('/register', [AuthController::class, 'register']); // Registrasi
-Route::post('/login', [AuthController::class, 'login']);       // Login
+Route::post('/login', [AuthController::class, 'login']);  // Login
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Logout
-Route::group(['prefix' => 'user', 'middleware' => 'auth:sanctum'], function () {
+Route::middleware('auth:sanctum')->prefix('user')->group(function () {
     Route::post('/update', [UserController::class, 'update']);
     Route::post('/updatePassword', [UserController::class, 'updatePassword']);
 });
