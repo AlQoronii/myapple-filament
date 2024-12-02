@@ -2,9 +2,11 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\User\UpdatePasswordRequest;
+use App\Http\Requests\User\UpdateProfileRequest;
+use App\Http\Resources\ApiResource;
+use Exception;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use Illuminate\Validation\ValidationException;
 
 class UserController extends Controller
 {
@@ -17,21 +19,75 @@ class UserController extends Controller
         ]);
     }
 
-    public function update(Request $request)
+    public function update(UpdateProfileRequest $request)
     {
+        try {
+            $request->user()->update($request->getData());
+
+            return new ApiResource(true, "User Data Updated!", $request->user());
+        } catch (Exception $e) {
+            Log::info("message error log update user: " + $e);
+            return new ApiResource(false, 'User Data Update Failed!', null);
+        }
+    }
+
+    public function updatePassword(UpdatePasswordRequest $request)
+    {
+        $user = $request->user();
+
+        $data = $request->getData();
+
+        if (!Hash::check($data['current_password'], $user->password)) {
+            return new ApiResource(false,"Validation Failed!",null);
+        }
+
+        $user->password = $data['new_password'];
+        $user->save();
+
+        $user->tokens()->delete();
+
+        return new ApiResource(true,'Password Updated!', null);
+    }
+
+    public function updatePassword(Request $request)
+    {
+        // Validate the incoming request data
         $validated = $request->validate([
-            'name' => 'sometimes|string|min:3|max:255',
-            'email' => 'sometimes|email|max:255|unique:users,email,' . $request->user()->id,
+            'current_password' => 'required|string',
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',              // Minimum 8 characters
+                'confirmed',          // Must match the new_password_confirmation field
+            ],
         ]);
 
-        $request->user()->update($validated);
+        $user = $request->user();
+
+        // Check if the provided current password matches the stored password
+        if (!Hash::check($validated['current_password'], $user->password)) {
+            return response()->json([
+                'success' => false,
+                'message' => 'Password saat ini salah.', // "Current password is incorrect."
+            ], 400); // Bad Request
+        }
+
+        // Update the user's password
+        $user->password = Hash::make($validated['new_password']);
+        $user->save();
+
+        // Optional: Invalidate all existing tokens to ensure security
+        // This forces the user to log in again with the new password
+        // If you're using Laravel Sanctum or Passport, adjust accordingly
+        // Example for Laravel Sanctum:
+        // $user->tokens()->delete();
 
         return response()->json([
             'success' => true,
-            'message' => 'User data updated successfully',
-            'data' => $request->user(),
-        ]);
+            'message' => 'Password berhasil diperbarui.', // "Password updated successfully."
+        ], 200); // OK
     }
+}
 
     public function updatePassword(Request $request)
     {
