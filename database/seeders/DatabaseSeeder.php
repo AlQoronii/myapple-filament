@@ -36,6 +36,7 @@ class DatabaseSeeder extends Seeder
         // Memanggil seeder lain
         $this->call([
             CategoriesSeeder::class,
+            ArticleSeeder::class,
         ]);
     }
 }

@@ -9,7 +9,15 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        return response()->json(Article::all());
+        $articles = Article::select('title', 'content', 'image_path', 'source', 'publication_date')->get();
+        
+        // Membuat URL lengkap untuk image_path jika gambar disimpan di server
+        $articles->map(function($article) {
+            $article->image_url = url('storage/' . $article->image_path);  // Pastikan path sesuai dengan tempat penyimpanan gambar
+            return $article;
+        });
+
+        return response()->json(['data' => $articles]);
     }
 
     public function store(Request $request)

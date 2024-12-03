@@ -29,6 +29,8 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function () {
     Route::post('/updatePassword', [UserController::class, 'updatePassword']);
 });
 
+Route::get('/articles', [ArticleController::class, 'index']);
+
 
 // Endpoint yang membutuhkan autentikasi
 Route::middleware('auth:sanctum')->group(function () {
@@ -42,7 +44,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('categories', CategoryController::class);
 
     // Endpoint untuk artikel (opsional)
-    Route::apiResource('articles', ArticleController::class);
+    // Route::apiResource('articles', ArticleController::class);
 
     // Mengambil data pengguna yang sedang login
     Route::get('/user', function (Request $request) {
