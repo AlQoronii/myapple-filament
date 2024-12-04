@@ -14,6 +14,7 @@ class Apple extends Model
     protected $fillable = [
         'user_id',
         'nama_apel',
+        'image_path',
     ];
 
     public function user()

@@ -22,18 +22,25 @@ class HistoryController extends Controller
         $validated = $request->validate([
             'user_id' => 'required|exists:users,id',
             'scan_date' => 'required|date',
-            'scan_image_path' => 'required|string|max:255',
+            'scan_image' => 'required|file|mimes:jpg,jpeg,png|max:2048', // Validasi file
             'disease_info_id' => 'required|exists:categories,id',
         ]);
-
+    
+        // Simpan file yang diunggah
+        if ($request->hasFile('scan_image')) {
+            $filePath = $request->file('scan_image')->store('scan', 'public'); // Simpan ke folder 'storage/app/public/scan'
+            $validated['scan_image_path'] = $filePath; // Tambahkan path ke data yang divalidasi
+        }
+    
         $history = History::create($validated);
-
+    
         return response()->json([
             'success' => true,
             'message' => 'History created successfully!',
             'data' => $history,
         ], 201);
     }
+    
 
     public function show($id)
     {
