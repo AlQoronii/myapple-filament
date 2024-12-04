@@ -9,11 +9,11 @@ class ArticleController extends Controller
 {
     public function index()
     {
-        $articles = Article::select('title', 'content', 'image_path', 'source', 'publication_date')->get();
+        $articles = Article::select('id','title', 'content', 'image_path', 'source', 'publication_date')->get();
         
         // Membuat URL lengkap untuk image_path jika gambar disimpan di server
         $articles->map(function($article) {
-            $article->image_url = url('storage/' . $article->image_path);  // Pastikan path sesuai dengan tempat penyimpanan gambar
+            $article->image_url = url('storage/'.$article->image_path);  // Pastikan path sesuai dengan tempat penyimpanan gambar
             return $article;
         });
 
