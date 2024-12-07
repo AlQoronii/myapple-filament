@@ -31,12 +31,12 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function () {
 Route::get('/categories/{category}', [CategoryController::class, 'getCategoryByLabel']);
 
 Route::get('/articles', [ArticleController::class, 'index']);
-
+Route::apiResource('apples', AppleController::class);
 
 // Endpoint yang membutuhkan autentikasi
 Route::middleware('auth:sanctum')->group(function () {
     // Endpoint untuk tanaman apel
-    Route::apiResource('apples', AppleController::class);
+    // Route::apiResource('apples', AppleController::class);
 
     // Endpoint untuk riwayat diagnosis
     Route::apiResource('histories', HistoryController::class);

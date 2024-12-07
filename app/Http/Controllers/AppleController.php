@@ -28,16 +28,18 @@ class AppleController extends Controller
             'image_path' => 'required|file|mimes:jpeg,jpg,png|max:10240', // Ubah dari image_path ke image
         ]);
 
-        // Simpan file dan dapatkan path
-        $filePath = $request->file('image_path')->store('images/apples', 'public');
+         // Simpan file dan dapatkan nama file
+    $file = $request->file('image_path');
+    $fileName = $file->getClientOriginalName(); // Ambil nama file asli
+    $filePath = $file->storeAs('images/apples', $fileName, 'public'); // Simpan dengan nama asli
 
-        // Tambahkan path file ke data yang akan disimpan
-        $appleData = $validated;
-        $appleData['image_path'] = $filePath;
+    // Tambahkan nama file ke data yang akan disimpan
+    $appleData = $validated;
+    $appleData['image_path'] = $fileName; // Simpan hanya nama file
 
-        $apple = Apple::create($appleData);
+    $apple = Apple::create($appleData);
 
-        return response()->json(['message' => 'Apple created successfully', 'data' => $apple], 201);
+    return response()->json(['message' => 'Apple created successfully', 'data' => $apple], 201);
     }
 
     public function show($id)
