@@ -33,7 +33,13 @@ class UpdateProfileRequest extends FormRequest
                 'email',
                 'max:255',
                 'unique:users,email,' . auth()->user()->id
-            ]
+            ],
+            "picture" => [
+            'nullable',
+            'image',
+            'mimes:jpeg,png,jpg,gif,svg',
+            'max:2048'
+        ]
         ];
     }
 

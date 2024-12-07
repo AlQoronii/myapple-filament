@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Validation\ValidationException;
+use Illuminate\Support\Facades\Validator;
 
 class UserController extends Controller
 {
@@ -42,7 +43,7 @@ class UserController extends Controller
         $data = $request->getData();
 
         if (!Hash::check($data['current_password'], $user->password)) {
-            return new ApiResource(false,"Validation Failed!",null);
+            return new ApiResource(false, "Validation Failed!", null);
         }
 
         $user->password = $data['new_password'];
@@ -50,6 +51,37 @@ class UserController extends Controller
 
         $user->tokens()->delete();
 
-        return new ApiResource(true,'Password Updated!', null);
+        return new ApiResource(true, 'Password Updated!', null);
+    }
+
+    public function updatePhotoProfile(Request $request)
+    {
+        try {
+            $user = $request->user();
+            if (!$request->hasFile('picture')) {
+                return new ApiResource(false, 'No picture file received!', null);
+            }
+
+            $file = $request->file('picture');
+
+            $rules = [
+                'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+            ];
+
+            $validator = Validator::make($request->all(), $rules);
+
+            if ($validator->fails()) {
+                return new ApiResource(false, $validator->errors()->first(), null);
+            }
+
+            $path = $file->store('profile_pictures', 'public');
+            $user->profile_picture = $path;
+            $user->save();
+
+            return new ApiResource(true, "Profile picture updated!", $user);
+        } catch (Exception $e) {
+            Log::error("Error updating profile picture: " . $e->getMessage());
+            return new ApiResource(false, 'Failed to update profile picture!', null);
+        }
     }
 }
