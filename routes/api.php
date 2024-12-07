@@ -25,8 +25,10 @@ Route::post('/register', [AuthController::class, 'register']); // Registrasi
 Route::post('/login', [AuthController::class, 'login']);  // Login
 Route::post('/logout', [AuthController::class, 'logout'])->middleware('auth:sanctum'); // Logout
 Route::middleware('auth:sanctum')->prefix('user')->group(function () {
+    Route::get('/', [UserController::class, 'show']);
     Route::post('/update', [UserController::class, 'update']);
     Route::post('/updatePassword', [UserController::class, 'updatePassword']);
+    Route::post('/updatePhoto', [UserController::class, 'updatePhotoProfile']);
 });
 Route::get('/categories/{category}', [CategoryController::class, 'getCategoryByLabel']);
 
