@@ -75,4 +75,36 @@ class CategoryController extends Controller
             'data' => $category,
         ]);
     }
+
+    public function getCategoryByLabel($category)
+    {
+        try {
+            // Ambil semua kategori yang sesuai dengan nama category
+            $categories = Category::where('category', $category)->get();
+    
+            // Jika tidak ada kategori yang ditemukan
+            if ($categories->isEmpty()) {
+                throw new \Exception('No categories found for the given label');
+            }
+    
+            // Kembalikan hasil dalam bentuk JSON
+            return response()->json([
+                'success' => true,
+                'message' => 'Category retrieved successfully',
+                'data' => $categories
+            ]);
+        } catch (\Exception $e) {
+            // Menangkap exception dan mengembalikan pesan error asli
+            return response()->json([
+                'success' => false,
+                'message' => 'Error occurred',
+                'error' => $e->getMessage(),  // Menampilkan pesan error asli
+                'trace' => $e->getTraceAsString()  // Opsional: Menampilkan stack trace jika diperlukan
+            ], 500);  // Status code 500 untuk error internal server
+        }
+    }
+    
+    
+    
+
 }

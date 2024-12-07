@@ -28,6 +28,7 @@ Route::middleware('auth:sanctum')->prefix('user')->group(function () {
     Route::post('/update', [UserController::class, 'update']);
     Route::post('/updatePassword', [UserController::class, 'updatePassword']);
 });
+Route::get('/categories/{category}', [CategoryController::class, 'getCategoryByLabel']);
 
 Route::get('/articles', [ArticleController::class, 'index']);
 
@@ -41,7 +42,7 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::apiResource('histories', HistoryController::class);
 
     // Endpoint untuk kategori penyakit
-    Route::apiResource('categories', CategoryController::class);
+    // Route::apiResource('categories', CategoryController::class);
 
     // Endpoint untuk artikel (opsional)
     // Route::apiResource('articles', ArticleController::class);
