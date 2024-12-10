@@ -21,7 +21,7 @@ class AppleHistoryController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'apple_id' => 'required|exists:apples,id',
+            'apple_id' => 'required|exists:table_apple,id',
             'history_id' => 'required|exists:history,id',
         ]);
 
@@ -64,7 +64,7 @@ class AppleHistoryController extends Controller
         }
 
         $validated = $request->validate([
-            'apple_id' => 'sometimes|exists:apples,id',
+            'apple_id' => 'sometimes|exists:table_apple,id',
             'history_id' => 'sometimes|exists:history,id',
         ]);
 

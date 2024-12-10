@@ -8,16 +8,23 @@ use Illuminate\Support\Facades\Storage;
 
 class AppleController extends Controller
 {
-    public function index(Request $request)
+    public function index($user_id)
     {
-        $validated = $request->validate([
-            'user_id' => 'required|exists:users,id', // Validasi user_id
-        ]);
+        // Validasi apakah user_id ada
+        if (!\App\Models\User::where('id', $user_id)->exists()) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
     
-        $apples = Apple::where('user_id', $validated['user_id'])->paginate(10); // Filter berdasarkan user_id
-    
+        // Ambil apel milik user tersebut
+        $apples = Apple::where('user_id', $user_id)->paginate(10);
+        $apples->map(function($apple) {
+        $apple->image_url = url('storage/images/apples/'.$apple->image_path);  // Pastikan path sesuai dengan tempat penyimpanan gambar
+        return $apple;
+    });
         return response()->json($apples);
     }
+    
+    
     
 
     public function store(Request $request)

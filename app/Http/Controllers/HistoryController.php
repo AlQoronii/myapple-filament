@@ -27,18 +27,29 @@ class HistoryController extends Controller
         ]);
     
         // Simpan file yang diunggah
-        if ($request->hasFile('scan_image_path')) {
-            $filePath = $request->file('scan_image_path')->store('scan', 'public'); // Simpan ke folder 'storage/app/public/scan'
-            $validated['scan_image_path'] = $filePath; // Tambahkan path ke data yang divalidasi
-        }
+        // if ($request->hasFile('scan_image_path')) {
+        //     $filePath = $request->file('scan_image_path')->store('scan', 'public'); // Simpan ke folder 'storage/app/public/scan'
+        //     $validated['scan_image_path'] = $filePath; // Tambahkan path ke data yang divalidasi
+        // }
     
-        $history = History::create($validated);
+        $file = $request->file('scan_image_path');
+        $fileName = $file->getClientOriginalName(); // Ambil nama file asli
+        $filePath = $file->storeAs('images/scans', $fileName, 'public'); // Simpan dengan nama asli
     
+        // Tambahkan nama file ke data yang akan disimpan
+        $historyData = $validated;
+        $historyData['scan_image_path'] = $fileName; // Simpan hanya nama file
+    
+
+        $history = History::create($historyData);
+        
+        
         return response()->json([
             'success' => true,
             'message' => 'History created successfully!',
             'data' => $history,
         ], 201);
+        
     }
     
 
