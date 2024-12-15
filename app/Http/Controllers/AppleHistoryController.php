@@ -8,9 +8,21 @@ use Illuminate\Http\Request;
 class AppleHistoryController extends Controller
 {
 
-    public function index()
+    public function index(Request $request)
     {
-        $appleHistories = AppleHistory::paginate(10); // Pagination
+        $appleId = $request->query('apple_id');
+        
+        $query = AppleHistory::with(['history' => function($query) {
+            $query->with('diseaseInfo'); // Assuming there's a relationship with disease info
+        }]);
+        
+        // Filter by apple_id if provided
+        if ($appleId) {
+            $query->where('apple_id', $appleId);
+        }
+    
+        $appleHistories = $query->latest()->paginate(10);
+    
         return response()->json([
             'success' => true,
             'message' => 'Apple histories retrieved successfully!',
