@@ -410,24 +410,24 @@
         <h2 style="color: #2C5038; margin-bottom: 2rem; font-size: 2.5rem; text-align: center;">Our Member</h2>
         <div class="team-grid">
             <div class="team-card">
-                <img src="assets/antony.jpg" alt="Team Member" class="team-image">
-                <h3 class="team-name">El Gasing</h3>
+                <img src="assets/dq.jpeg" alt="Team Member" class="team-image">
+                <h3 class="team-name">Fatriya Ibnu Ash shidiqqi</h3>
                 <p class="team-role">Frontend Developer</p>
             </div>
             <div class="team-card">
-                <img src="assets/mudrik.jpg" alt="Team Member" class="team-image">            
-                <h3 class="team-name">El Dear God</h3>
+                <img src="assets/dhanes.jpeg" alt="Team Member" class="team-image">            
+                <h3 class="team-name">Dhaneswara Haryo Satriagung</h3>
                 <p class="team-role">Backend Developer</p>
             </div>
             <div class="team-card">
-                <img src="assets/onana.jpeg" alt="Team Member" class="team-image">
-                <h3 class="team-name">El Silahkan</h3>
+                <img src="assets/rizky.jpeg" alt="Team Member" class="team-image">
+                <h3 class="team-name">Muhammad Rizky Fauzi</h3>
                 <p class="team-role">Mobile Developer</p>
             </div>
             <div class="team-card">
-                <img src="assets/xavi.jpg" alt="Team Member" class="team-image">
+                <img src="assets/fathur.jpeg" alt="Team Member" class="team-image">
                 
-                <h3 class="team-name">El Tantrum</h3>
+                <h3 class="team-name">Muhammad Fathurrozak Al Qoroni</h3>
                 <p class="team-role">System Analyst</p>
             </div>
         </div>
