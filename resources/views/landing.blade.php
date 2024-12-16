@@ -324,7 +324,7 @@
                 <li><a href="#features">Features</a></li>
                 <li><a href="#about">About</a></li>
                 <li><a href="#team">Team</a></li>
-                <li><a href="http://127.0.0.1:8000/admin/login" style="background-color: white; color: #2C5038; padding: 8px 15px; border-radius: 5px;">Login</a></li>
+                <li><a href="http://192.168.43.147:8000/admin/login" style="background-color: white; color: #2C5038; padding: 8px 15px; border-radius: 5px;">Login</a></li>
             </ul>
         </div>
     </nav>
