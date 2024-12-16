@@ -38,7 +38,7 @@ class UpdateProfileRequest extends FormRequest
             'nullable',
             'image',
             'mimes:jpeg,png,jpg,gif,svg',
-            'max:2048'
+            'max:10240'
         ]
         ];
     }

@@ -23,18 +23,37 @@ class UpdatePasswordRequest extends FormRequest
     public function rules(): array
     {
         return [
-            "current_password" => [
-                "required",
-                "string"
+            'current_password' => [
+                'required',
+                'string'
             ],
-            "new_password" => [
-                "string",
-                "required",
-                "min:8"
-            ]
+            'new_password' => [
+                'required',
+                'string',
+                'min:8',
+                'confirmed',
+            ],
         ];
     }
 
+    /**
+     * Custom messages for validation errors.
+     *
+     * @return array<string, string>
+     */
+    public function messages(): array
+    {
+        return [
+            'current_password.required' => 'Password lama wajib diisi.',
+            'new_password.required' => 'Password baru wajib diisi.',
+            'new_password.min' => 'Password minimal 8 karakter.',
+            'new_password.confirmed' => 'Konfirmasi password tidak cocok.',
+        ];
+    }
+
+    /**
+     * After validation, hash the new password.
+     */
     protected function passedValidation()
     {
         $this->merge([
@@ -42,11 +61,16 @@ class UpdatePasswordRequest extends FormRequest
         ]);
     }
 
-    function getData(): array
+    /**
+     * Retrieve validated data as an array.
+     *
+     * @return array<string, string>
+     */
+    public function getData(): array
     {
         return [
-            "current_password" => $this->input('current_password'),
-            "new_password" => $this->input('new_password')
+            'current_password' => $this->input('current_password'),
+            'new_password' => $this->input('new_password'),
         ];
     }
 }

@@ -38,20 +38,22 @@ class UserController extends Controller
 
     public function updatePassword(UpdatePasswordRequest $request)
     {
-        $user = $request->user();
+        try {
+            $user = $request->user();
 
-        $data = $request->getData();
+            if (!Hash::check($request->input('current_password'), $user->password)) {
+                return new ApiResource(false, 'Password saat ini salah.', null);
+            }
 
-        if (!Hash::check($data['current_password'], $user->password)) {
-            return new ApiResource(false, "Validation Failed!", null);
+            $user->password = $request->input('new_password');
+            $user->save();
+
+            $user->tokens()->delete();
+
+            return new ApiResource(true, 'Password berhasil diperbarui.', null);
+        } catch (Exception $e) {
+            return new ApiResource(false, 'Terjadi kesalahan.', null);
         }
-
-        $user->password = $data['new_password'];
-        $user->save();
-
-        $user->tokens()->delete();
-
-        return new ApiResource(true, 'Password Updated!', null);
     }
 
     public function updatePhotoProfile(Request $request)
@@ -65,7 +67,7 @@ class UserController extends Controller
             $file = $request->file('picture');
 
             $rules = [
-                'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
+                'picture' => 'required|image|mimes:jpeg,png,jpg,gif,svg|max:10240',
             ];
 
             $validator = Validator::make($request->all(), $rules);
